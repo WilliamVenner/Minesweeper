@@ -6,8 +6,8 @@ import static org.junit.Assert.*;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 
-// This will ensure that the tests are performed in order of top to bottom,
-// preventing race conditions.
+/* This will ensure that the tests are performed in order of top to bottom,
+   preventing race conditions. */
 @FixMethodOrder(MethodSorters.JVM)
 public class MinefieldTest {
 	private static Minefield minefield;
@@ -181,17 +181,39 @@ public class MinefieldTest {
 	}
 	
 	@Test
-	public void testToString() {
-		// Enforce that we've placed a mine at all applicable corners of the minefield to robustly
-		// test neighbouring mine calculations.
-		minefield.mineTile(0, minefield.getColumnCount() - 1); // Top-right
-		minefield.mineTile(minefield.getRowCount() - 1, minefield.getColumnCount() - 1); // Bottom-right
-		minefield.mineTile(minefield.getRowCount() - 1, 0); // Bottom-left
+	public void testToStringPrecalculated() {
+		minefield = new Minefield(10, 10, 35); // 35 mines around the edges of the grid excluding (0,0)
+		
+		/* Place mines around the edges of the grid (excluding (0,0))
+		   This means we can easily compare against a precalculated string, as the
+		   output will always be the same. */
+		for (int row = 0; row < minefield.getRowCount(); row++) {
+			if (row == 0 || row == minefield.getRowCount() - 1) {
+				// If we're at the top or bottom edge...
+				for (int col = 0; col < minefield.getColumnCount(); col++) {
+					if (row != 0 || col != 0) { // Don't place a mine at (0,0)
+						minefield.mineTile(row, col);
+					}
+				}
+			} else {
+				// Otherwise, only place mines on the sides
+				for (int col = 0; col < 2; col++) {
+					minefield.mineTile(row, col * (minefield.getColumnCount() - 1));
+				}
+			}
+		}
+	}
+	
+	@Test
+	public void testToStringRandom() {
+		// Generate a random minefield
+		minefield = new Minefield(10, 10, 50);
+		minefield.populate();
 		
 		// Get the result of minefield.toString() and store it
 		String minefieldString = minefield.toString();
 		
-		// Iterate over every tile on the minefield
+		// Iterate over every tile on the minefield and calculate the neighbouring mines
 		for (int row = 0; row < minefield.getRowCount(); row++) {
 			for (int col = 0; col < minefield.getColumnCount(); col++) {
 				if (row == 0 && col == 0) {

@@ -188,8 +188,10 @@ class Minefield {
 					minefieldStr.append(mineNeighbours[row][column]);
 				}
 			}
-			// Append a newline to show a new row
-			minefieldStr.append('\n');
+			if (row != rows - 1) {
+				// Append a newline to show a new row
+				minefieldStr.append('\n');
+			}
 		}
 		
 		// Finally, convert the StringBuilder to a string and return it
