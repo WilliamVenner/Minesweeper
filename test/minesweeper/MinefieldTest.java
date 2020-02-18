@@ -37,6 +37,8 @@ public class MinefieldTest {
 	
 	@Test
 	public void testMinefieldExistence() {
+		assertNotNull(minefield);
+		assertNotNull(fullMinefield);
 		assertNotNull(new Minefield(10, 10, 50));
 	}
 	
