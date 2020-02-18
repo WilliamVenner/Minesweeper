@@ -3,8 +3,6 @@ package minesweeper;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.runners.MethodSorters;
 
 public class MinefieldTest {
 	private static Minefield minefield;
