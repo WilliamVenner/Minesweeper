@@ -202,6 +202,12 @@ public class MinefieldTest {
 				}
 			}
 		}
+		
+		// Get the result of minefield.toString() and store it
+		String minefieldString = minefield.toString(true);
+		
+		// Compare to precalculated string
+		assertEquals(minefieldString, "2*********\n*43333335*\n*30000003*\n*30000003*\n*30000003*\n*30000003*\n*30000003*\n*30000003*\n*53333335*\n**********");
 	}
 	
 	@Test
