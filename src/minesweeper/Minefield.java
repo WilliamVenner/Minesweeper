@@ -121,8 +121,9 @@ class Minefield {
 			randomMines[i] = true;
 		}
 		
-		// Perform the Sattolo variant of the Fisher-Yates shuffle
-		// https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#Sattolo%27s_algorithm
+		/* Perform the Sattolo variant of the Fisher-Yates shuffle
+		   https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#Sattolo%27s_algorithm
+		   https://danluu.com/sattolo/ */
 		int n = randomMines.length;
 		for (int i = 0; i < n - 1; i++) {
 			int max = n - 1;
@@ -164,15 +165,6 @@ class Minefield {
 		   than the bruteforcing method when the percentage of mines is >= 60%.
 		   https://plot.ly/~WilliamVenner/2/ */
 		if ((float)maxMines / (float)tiles >= 0.6) {
-			populateFisherYates(r);
-		} else {
-			populateBruteforce(r);
-		}
-	}
-	
-	public void populate(boolean FisherYates) {
-		SecureRandom r = new SecureRandom();
-		if (FisherYates) {
 			populateFisherYates(r);
 		} else {
 			populateBruteforce(r);
