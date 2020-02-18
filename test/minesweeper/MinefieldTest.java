@@ -1,45 +1,40 @@
 package minesweeper;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.FixMethodOrder;
-import org.junit.runners.MethodSorters;
+import org.junit.Before;
 
-/* This will ensure that the tests are performed in order of top to bottom,
-   preventing race conditions. */
-@FixMethodOrder(MethodSorters.JVM)
 public class MinefieldTest {
 	private static Minefield minefield;
-	private static Minefield emptyMinefield;
 	private static Minefield fullMinefield;
 	
-	@BeforeClass
-	public static void setUpClass() {
+	@Before
+	public void setUp() {
 		minefield = new Minefield(10, 10, 50);
-		emptyMinefield = new Minefield(10, 10, 50);
 		fullMinefield = new Minefield(10, 10, 99);
 	}
 	
 	@Test
 	public void testMinefieldExistence() {
-		assertNotEquals(new Minefield(10, 10, 50), null);
+		assertNotNull(minefield);
+		assertNotNull(fullMinefield);
+		assertNotNull(new Minefield(10, 10, 50));
 	}
 	
 	@Test
 	public void testMinefieldArrays() {
-		assertEquals(minefield.mines.length, 10);
-		assertEquals(minefield.mines[0].length, 10);
-		assertEquals(minefield.mineNeighbours.length, 10);
-		assertEquals(minefield.mineNeighbours[0].length, 10);
+		assertEquals(10, minefield.mines.length);
+		assertEquals(10, minefield.mines[0].length);
+		assertEquals(10, minefield.mineNeighbours.length);
+		assertEquals(10, minefield.mineNeighbours[0].length);
 	}
 	
 	@Test
 	public void testMinefieldAttributes() {
-		assertEquals(minefield.getColumnCount(), 10);
-		assertEquals(minefield.getRowCount(), 10);
-		assertEquals(minefield.getMaxMines(), 50);
-		assertEquals(minefield.getTileCount(), 10 * 10);
+		assertEquals(10, minefield.getColumnCount());
+		assertEquals(10, minefield.getRowCount());
+		assertEquals(50, minefield.getMaxMines());
+		assertEquals(10 * 10, minefield.getTileCount());
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
@@ -92,10 +87,10 @@ public class MinefieldTest {
 				}
 			}
 		}
-		assertEquals(mineCount, minefield.getMaxMines());
+		assertEquals(minefield.getMaxMines(), mineCount);
 		
 		// Check that (0,0) has no mine on it
-		assertEquals(minefield.mines[0][0], false);
+		assertFalse(minefield.mines[0][0]);
 	}
 	
 	@Test
@@ -112,10 +107,10 @@ public class MinefieldTest {
 				}
 			}
 		}
-		assertEquals(mineCount, 99);
+		assertEquals(99, mineCount);
 		
 		// Check that (0,0) has no mine on it
-		assertEquals(fullMinefield.mines[0][0], false);
+		assertFalse(fullMinefield.mines[0][0]);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
@@ -135,10 +130,10 @@ public class MinefieldTest {
 	
 	@Test
 	public void testMineTile() {
-		assertEquals(emptyMinefield.getMineCount(), 0);
+		assertEquals(0, minefield.getMineCount());
 		
 		// Place a mine at (1,1) on our empty minefield
-		emptyMinefield.mineTile(1, 1);
+		minefield.mineTile(1, 1);
 		
 		// Iterate through the row above, the mine's row, and the row below
 		for (int row = 0; row <= 2; row++) {
@@ -146,17 +141,17 @@ public class MinefieldTest {
 			for (int col = 0; col <= 2; col++) {
 				if (row == 1 && col == 1) {
 					// Check if the mine was placed
-					assertEquals(emptyMinefield.mines[row][col], true);
+					assertTrue(minefield.mines[row][col]);
 				} else {
 					// Check if the neighbouring tile has 1 mine neighbour
-					assertEquals(emptyMinefield.mineNeighbours[row][col], 1);
+					assertEquals(1, minefield.mineNeighbours[row][col]);
 				}
 			}
 		}
 		
 		// Do the test again, to check if the neighbouring mine incrementation behaviour works
 		// Place a mine next to the previous one
-		emptyMinefield.mineTile(1, 2);
+		minefield.mineTile(1, 2);
 		
 		// Iterate through the row above, the mine's row, and the row below
 		for (int row = 0; row <= 2; row++) {
@@ -164,26 +159,24 @@ public class MinefieldTest {
 			for (int col = 1; col <= 2; col++) {
 				if (row == 1 && col == 2) {
 					// Check if the mine was placed
-					assertEquals(emptyMinefield.mines[row][col], true);
+					assertTrue(minefield.mines[row][col]);
 				} else if (row == 1 && col == 1) {
 					// Check if the previous mine was placed
-					assertEquals(emptyMinefield.mines[row][col], true);
+					assertTrue(minefield.mines[row][col]);
 				} else {
 					// Check if the neighbouring tile has 2 mine neighbours
-					assertEquals(emptyMinefield.mineNeighbours[row][col], 2);
+					assertEquals(2, minefield.mineNeighbours[row][col]);
 				}
 			}
 			// Check if the right-neighbouring tile has 1 mine neighbour
-			assertEquals(emptyMinefield.mineNeighbours[row][3], 1);
+			assertEquals(1, minefield.mineNeighbours[row][3]);
 		}
 		
-		assertEquals(emptyMinefield.getMineCount(), 2);
+		assertEquals(2, minefield.getMineCount());
 	}
 	
 	@Test
 	public void testToStringPrecalculated() {
-		minefield = new Minefield(10, 10, 35); // 35 mines around the edges of the grid excluding (0,0)
-		
 		/* Place mines around the edges of the grid (excluding (0,0))
 		   This means we can easily compare against a precalculated string, as the
 		   output will always be the same. */
@@ -207,13 +200,12 @@ public class MinefieldTest {
 		String minefieldString = minefield.toString();
 		
 		// Compare to precalculated string
-		assertEquals(minefieldString, "2*********\n*43333335*\n*30000003*\n*30000003*\n*30000003*\n*30000003*\n*30000003*\n*30000003*\n*53333335*\n**********");
+		assertEquals("2*********\n*43333335*\n*30000003*\n*30000003*\n*30000003*\n*30000003*\n*30000003*\n*30000003*\n*53333335*\n**********", minefieldString);
 	}
 	
 	@Test
 	public void testToStringRandom() {
 		// Generate a random minefield
-		minefield = new Minefield(10, 10, 50);
 		minefield.populate();
 		
 		// Get the result of minefield.toString() and store it
@@ -224,14 +216,14 @@ public class MinefieldTest {
 			for (int col = 0; col < minefield.getColumnCount(); col++) {
 				if (row == 0 && col == 0) {
 					// Make sure (0,0) has no mine placed
-					assertEquals(minefield.mines[row][col], false);
+					assertFalse(minefield.mines[row][col]);
 				} else {
 					// For every other tile, calculate its offset in the minefield string
 					int tileStrCharPos = col + (row * (minefield.getColumnCount() + 1));
 					String tileStrChar = String.valueOf(minefieldString.charAt(tileStrCharPos));
 					if (minefield.mines[row][col]) {
 						// Check whether this tile in the string is marked as a mine (asterisk)
-						assertEquals(tileStrChar, "*");
+						assertEquals("*", tileStrChar);
 					} else {
 						// Calculate the number of neighbour mines for this tile
 						int mineNeighbours = 0;
@@ -252,7 +244,7 @@ public class MinefieldTest {
 						}
 						
 						// Check whether the number of calculated neighbours matches the number returned in the minefield string
-						assertEquals(tileStrChar, String.valueOf(mineNeighbours));
+						assertEquals(String.valueOf(mineNeighbours), tileStrChar);
 					}
 				}
 			}
