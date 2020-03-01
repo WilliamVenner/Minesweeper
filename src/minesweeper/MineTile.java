@@ -31,16 +31,23 @@ public class MineTile {
 	}
 	
 	public void addMineNeighbour() {
-		this.mineNeighbours++;
+		if (mineNeighbours == 8) {
+			throw new ArithmeticException("Can't have more than 8 mine neighbours");
+		} else {
+			mineNeighbours++;
+		}
+	}
+	
+	public void removeMineNeighbour() {
+		if (mineNeighbours == 0) {
+			throw new ArithmeticException("Can't have less than 0 mine neighbours");
+		} else {
+			mineNeighbours--;
+		}
 	}
 	
 	public int getMineNeighbours() {
 		return mineNeighbours;
-	}
-	
-	@Override
-	public String toString() {
-		return this.toString(false);
 	}
 	
 	public String toString(boolean forceReveal) {
@@ -57,5 +64,10 @@ public class MineTile {
 		} else {
 			return "#";
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return this.toString(false);
 	}
 }

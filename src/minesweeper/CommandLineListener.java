@@ -21,6 +21,17 @@ public class CommandLineListener {
 		return true;
 	}
 	
+	private boolean checkWin() {
+		if (minefield.areAllMinesRevealed()) {
+			System.out.println("You've revealed & marked all mines, and haven't incorrectly marked any tiles.");
+			System.out.println("Congratulations - you win!");
+			System.out.println(minefield.toString(true));
+			minefield = null;
+			return true;
+		}
+		return false;
+	}
+	
 	private void execute(Command c) {
 		if (c.getCommand() == CommandWord.UNKNOWN) {
 			printPrompt(c.getMsg());
@@ -40,7 +51,7 @@ public class CommandLineListener {
 							System.out.println("You stepped on a mine! GAME OVER");
 							System.out.println(minefield.toString(true));
 							minefield = null;
-						} else {
+						} else if (!checkWin()) {
 							System.out.println(minefield.toString());
 						}
 					}
@@ -49,7 +60,9 @@ public class CommandLineListener {
 				case MARK:
 					if (checkBounds(c.getRow(), c.getColumn())) {
 						minefield.markTile(c.getRow(), c.getColumn());
-						System.out.println(minefield.toString());
+						if (!checkWin()) {
+							System.out.println(minefield.toString());
+						}
 					}
 					break;
 			}

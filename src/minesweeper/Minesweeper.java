@@ -2,13 +2,14 @@ package minesweeper;
 
 public class Minesweeper {
 	private static Minefield minefield;
+	private static CommandLineListener commandLineListener;
 
 	public static void main(String[] args) {
-		new CommandLineListener();
+		commandLineListener = new CommandLineListener();
 	}
 	
-	public static Minefield newGame(int rows, int columns, int maxMines) {
-		Minefield minefield = new Minefield(rows, columns, maxMines);
+	static Minefield newGame(int rows, int columns, int maxMines) {
+		minefield = new Minefield(rows, columns, maxMines);
 		minefield.populate();
 		return minefield;
 	}
