@@ -10,8 +10,8 @@ public class MineTile {
 		return mined;
 	}
 
-	public void mine() {
-		mined = true;
+	public void setMined(boolean mined) {
+		this.mined = mined;
 	}
 	
 	public boolean isRevealed() {

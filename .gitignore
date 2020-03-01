@@ -32,3 +32,4 @@ nbdist/
 
 dist/README.txt
 !dist/lib/*.jar
+/dist/

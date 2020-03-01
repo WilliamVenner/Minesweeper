@@ -4,6 +4,12 @@ public class Minesweeper {
 	private static Minefield minefield;
 
 	public static void main(String[] args) {
-		minefield = new Minefield(10, 10, 50);
+		new CommandLineListener();
+	}
+	
+	public static Minefield newGame(int rows, int columns, int maxMines) {
+		Minefield minefield = new Minefield(rows, columns, maxMines);
+		minefield.populate();
+		return minefield;
 	}
 }
