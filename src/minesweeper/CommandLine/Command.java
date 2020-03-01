@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package minesweeper;
+package minesweeper.CommandLine;
 /**
  * @author ianw
  * A representation of what the user wants the game to do next.   

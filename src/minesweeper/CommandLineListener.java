@@ -1,5 +1,9 @@
 package minesweeper;
 
+import minesweeper.CommandLine.Command;
+import minesweeper.CommandLine.CommandWord;
+import minesweeper.CommandLine.Parser;
+
 public class CommandLineListener {
 	private Minefield minefield;
 	

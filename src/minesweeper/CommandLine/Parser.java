@@ -1,4 +1,4 @@
-package minesweeper;
+package minesweeper.CommandLine;
 
 import java.util.Scanner;
 
