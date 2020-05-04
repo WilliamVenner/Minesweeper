@@ -3,7 +3,7 @@ package minesweeper;
 import java.security.SecureRandom;
 import java.util.Stack;
 
-class Minefield {
+public class Minefield {
 	private final int rows;
 	private final int columns;
 	private final int tileCount;
@@ -40,6 +40,10 @@ class Minefield {
 
 	public int getMineCount() {
 		return mineCount;
+	}
+	
+	public MineTile getTile(int row, int column) {
+		return tiles[row][column];
 	}
 
 	public Minefield(int rows, int columns, int maxMines) {
@@ -85,7 +89,7 @@ class Minefield {
 		return true;
 	}
 	
-	public void markTile(int row, int column) {
+	public boolean markTile(int row, int column) {
 		// Argument sanity checks for coordinate boundaries
 		if (row < 0 || row >= rows)
 			throw new IllegalArgumentException("Row coordinate out of range");
@@ -94,6 +98,8 @@ class Minefield {
 		
 		// Toggle marked
 		tiles[row][column].toggleMarked();
+		
+		return tiles[row][column].isMarked();
 	}
 	
 	private void stepCompute(Stack stepCoordinates, int row, int column) {
@@ -115,7 +121,7 @@ class Minefield {
 					// Don't step into an already revealed tile (stack overflow!)
 					if (!tiles[neighbourRow][neighbourCol].isRevealed()) {
 						// Recursively reveal the neighbouring tile (add its 1D coordinate to the stepCoordinates stack for step to deal with)
-						stepCoordinates.push(neighbourRow * rows + neighbourCol);
+						stepCoordinates.push(new Coordinates(neighbourRow, neighbourCol));
 					}
 				}
 			}
@@ -179,24 +185,18 @@ class Minefield {
 			/* When performing very deep recursion (such as when the grid is huge), Java will throw a java.lang.StackOverflowError
 			   To solve this, we'll use our own stack...
 			   https://en.wikipedia.org/wiki/Stack_overflow#Very_deep_recursion */
-			Stack<Integer> stepCoordinates = new Stack<>();
+			Stack<Coordinates> stepCoordinates = new Stack<>();
 
 			// Push our first 1D coordinate onto the stack
-			stepCoordinates.push(row * rows + column);
-
+			stepCoordinates.push(new Coordinates(row, column));
+			
 			while (!stepCoordinates.isEmpty()) {
 				/* Pop the coordinate off the stack - this is kind of like our "recursion" base case, as the while loop
 				   will terminate when the stack becomes empty */
-				int coord = stepCoordinates.pop();
-
-				// Calculate row number from 1D tile coordinate
-				int stepRow = (int) Math.floor(coord / rows);
-
-				// Calculate column number from 1D tile coordinate
-				int stepColumn = coord % rows;
+				Coordinates coords = stepCoordinates.pop();
 
 				// Call stepCompute, our "real" step function, abstracted for this stack
-				stepCompute(stepCoordinates, stepRow, stepColumn);
+				stepCompute(stepCoordinates, coords.x, coords.y);
 			}
 		}
 		
@@ -206,9 +206,9 @@ class Minefield {
 	public boolean mineTile(int row, int column) {
 		// Argument sanity checks for coordinate boundaries and excepting (0,0)
 		if (row < 0 || row >= rows)
-			throw new IllegalArgumentException("Row coordinate out of range");
+			throw new IllegalArgumentException("Row coordinate out of range (" + row + "," + column + ") > (" + (rows - 1) + "," + (columns - 1) + ")");
 		if (column < 0 || column >= columns)
-			throw new IllegalArgumentException("Column coordinate out of range");
+			throw new IllegalArgumentException("Column coordinate out of range (" + row + "," + column + ") > (" + (rows - 1) + "," + (columns - 1) + ")");
 		if (column == 0 && row == 0)
 			throw new IllegalArgumentException("You cannot place a mine at (0,0)");
 		
@@ -247,15 +247,9 @@ class Minefield {
 	private void populateBruteforce() {
 		// Attempt to place tiles at random tiles until we've placed the amount required (maxMines)
 		while (mineCount < maxMines) {
-			/* Generates a random integer from 1..(tileCount - 1) = (1,0)..(tileCount-1,tileCount-1)
-			   This represents a 1-dimensional tile coordinate that we can convert to 2D */
-			int coord = random.nextInt(tileCount - 1) + 1;
-
-			// Calculate row number from 1D tile coordinate
-			int row = (int) Math.floor(coord / rows);
-
-			// Calculate column number from 1D tile coordinate
-			int column = coord % rows;
+			// Generate a random row and column
+			int row = random.nextInt(rows - 1) + 1;
+			int column = random.nextInt(columns - 1) + 1;
 
 			// Attempt to place a mine at this tile
 			mineTile(row, column);
