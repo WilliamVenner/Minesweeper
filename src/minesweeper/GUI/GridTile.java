@@ -15,12 +15,12 @@ import minesweeper.MineTile;
 
 public class GridTile extends AnchorPane {
     public static enum TILE {
-		TILE,
-		REVEALED,
-		MARKED,
-		BOMB,
-		BOUNDARY
-	}
+        TILE,
+        REVEALED,
+        MARKED,
+        BOMB,
+        BOUNDARY
+    }
     
 	public MineTile mineTile;
 	
@@ -83,7 +83,7 @@ public class GridTile extends AnchorPane {
 		final int mineNeighbours = mineTile.getMineNeighbours();
 		if (mineTile.isRevealed() && mineNeighbours > 0) {
 			final int r = (int)(((float)mineNeighbours / 4.0) * 255.0);
-			final int g = (int)(((1.0 - ((float)mineNeighbours / 4.0)) * 255.0));
+			final int g = (int)(((1.0 - ((float)mineNeighbours / 4.0)) * 255.0)); // bug here?
 			neighbouringMinesLabel.setTextFill(Color.rgb(r, g, 0));
 			neighbouringMinesLabel.setText(String.valueOf(mineNeighbours));
 			neighbouringMinesLabel.setVisible(true);

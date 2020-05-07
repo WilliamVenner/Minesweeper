@@ -41,7 +41,7 @@ public class MinesweeperGUI extends Application {
 	private GridPane gameGrid;
     private MenuBar gameMenuBar;
     
-    private GameSounds gameSounds = new GameSounds();
+    private final GameSounds gameSounds = new GameSounds();
     
 	private Minefield minefield;
 	private GridTile[][] tiles;
